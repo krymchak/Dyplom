@@ -6,9 +6,11 @@ import android.arch.persistence.room.Room
 import android.content.Context
 
 
-@Database(entities = [Medicine::class], version = 12)
+//@Database(entities = [Medicine::class, TimeOfMedicine::class], version = 14)
+@Database(entities = [Medicine::class, TimeOfMedicine::class], version = 1)
 abstract class MyDatabase : RoomDatabase() {
     abstract fun MedicineDAO(): MedicineDAO
+    abstract fun TimeOfMedicineDAO(): TimeOfMedicineDAO
 
     companion object {
 

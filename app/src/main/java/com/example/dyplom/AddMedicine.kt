@@ -2,6 +2,7 @@ package com.example.dyplom
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -10,10 +11,11 @@ import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
-import android.text.format.DateFormat
+import android.util.Log
 import android.view.View
 import android.widget.*
 import kotlinx.android.synthetic.main.add_medicine.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 class AddMedicine : AppCompatActivity() {
@@ -21,30 +23,26 @@ class AddMedicine : AppCompatActivity() {
     var id = 1
     var type = ""
     var tytul=""
-    //var priority=0
     var types= arrayOf("tablet","capsule", "drops", "injection", "ointment", "syrup", "spoon", "spray", "inhalator")
-    var time=""
+    var listOfTime: ArrayList<TimeOfMedicine> = arrayListOf<TimeOfMedicine>()
+    private val adapter : TimeAdapter = TimeAdapter(this, ArrayList<TimeOfMedicine>())
+    lateinit var gridView : GridView
+    var timeid = MyDatabase.getInstance(this).TimeOfMedicineDAO().max()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_medicine)
 
-        timePicker1.setIs24HourView(DateFormat.is24HourFormat(this))
+        //timePicker1.setIs24HourView(DateFormat.is24HourFormat(this))
+        gridView = findViewById<GridView>(R.id.gridview)
+        gridView.setAdapter(adapter)
 
         if (savedInstanceState != null) {
 
             type = savedInstanceState.getString("type")
             tytul = savedInstanceState.getString("tytul")
-            //priority = savedInstanceState.getInt("priority")
-            time = savedInstanceState.getString("time")
 
-
-            /*if (priority!=0)
-            {
-                val buttonID = "pryorytet$priority"
-                val resID = resources.getIdentifier(buttonID, "id", packageName)
-                findViewById<TextView>(resID).background.setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY)
-            }*/
             if (type!="")
             {
                 val buttonID = type
@@ -55,44 +53,36 @@ class AddMedicine : AppCompatActivity() {
 
     }
 
+    fun add_time(v:View)
+    {
+        val calendar = Calendar.getInstance()
+        val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
+            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),hour, minute, 0)
+            id = MyDatabase.getInstance(this).MedicineDAO().max() + 1
+            timeid++
+            val i = Intent(this, MedicineManager::class.java)
+            i.putExtra("id", id)
+            i.putExtra("timeid", timeid)
+            val pi = PendingIntent.getBroadcast(this, id+timeid, i, PendingIntent.FLAG_UPDATE_CURRENT)
+            var a: AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            a.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),24*60*60*1000, pi)
+            val time = SimpleDateFormat("HH:mm").format(calendar.time)
+
+
+
+            Log.i("aaaa", timeid.toString())
+            val newTime = TimeOfMedicine(timeid,id,time)
+            adapter.add(newTime)
+            listOfTime.add(newTime)
+        }
+        TimePickerDialog(this, timeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
+    }
+
     @RequiresApi(Build.VERSION_CODES.M)
     fun add(v: View)
     {
         var editText = findViewById(R.id.tytul) as EditText
         tytul = editText.text.toString()
-        //var editText2 = findViewById(R.id.time) as EditText
-        //var editText3 = findViewById(R.id.time2) as EditText
-        //time = editText2.text.toString().toInt()*3600+editText3.text.toString().toInt()*60
-        var timePicker = findViewById(R.id.timePicker1) as TimePicker
-        if (timePicker.minute>9) {
-            time = timePicker.hour.toString() + ":" + timePicker.minute.toString()
-        }
-        else {
-            time = timePicker.hour.toString() + ":0" + timePicker.minute.toString()
-        }
-        var a: AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val calendar = Calendar.getInstance()
-        if (android.os.Build.VERSION.SDK_INT >= 23) {
-            calendar.set(
-                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
-                timePicker1.getHour(), timePicker1.getMinute(), 0
-            )
-        } else {
-            calendar.set(
-                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
-                timePicker1.getCurrentHour(), timePicker1.getCurrentMinute(), 0
-            )
-        }
-
-        //id = intent.getIntExtra("id",1)
-        id = MyDatabase.getInstance(this).MedicineDAO().max() + 1
-        val i = Intent(this, MedicineManager::class.java)
-        i.putExtra("id", id)
-        val pi = PendingIntent.getBroadcast(this, id, i, PendingIntent.FLAG_UPDATE_CURRENT)
-
-
-        a.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),24*60*60*1000, pi)
-
 
         val intent = Intent()
 
@@ -106,23 +96,17 @@ class AddMedicine : AppCompatActivity() {
             Toast.makeText(this, "Wpisz nazwe zadania", Toast.LENGTH_SHORT).show()
             return
         }
-       /* if (priority==0)
+        if (listOfTime.isEmpty())
         {
-            Toast.makeText(this, "Wybierz pryorytet", Toast.LENGTH_SHORT).show()
-            return
-        }*/
-        if (time=="")
-        {
-            Toast.makeText(this, "Wybierz czas", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Wprowadz czas", Toast.LENGTH_SHORT).show()
             return
         }
-       /* intent.putExtra("tytul", tytul.toString())
-        intent.putExtra("typ", type)
-        intent.putExtra("timer", time)
-        //intent.putExtra("pryorytet", priority)*/
 
-        var item = Medicine(id, tytul,time,type/*, priority*/)
+        var item = Medicine(id, tytul,/*time,*/type/*, priority*/)
+
         MyDatabase.getInstance(this).MedicineDAO().insert(item)
+
+        MyDatabase.getInstance(this).TimeOfMedicineDAO().insert(listOfTime)
         setResult(RESULT_OK, intent);
         finish();
 
@@ -144,23 +128,11 @@ class AddMedicine : AppCompatActivity() {
 
     }
 
-    /*fun pryorytet(v: View)
-    {
-        priority=findViewById<TextView>(v.getId()).text.toString().toInt()
-        for (i in 1..4)
-        {
-            val buttonID = "pryorytet$i"
-            val resID = resources.getIdentifier(buttonID, "id", packageName)
-            findViewById<TextView>(resID).background.clearColorFilter()
-
-        }
-        findViewById<TextView>(v.getId()).background.setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
-    }*/
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         savedInstanceState.putString("type", type)
         savedInstanceState.putString("tytul", tytul)
-        savedInstanceState.putString("time", time)
+        //savedInstanceState.putString("time", time)
         //savedInstanceState.putInt("priority", priority)
         super.onSaveInstanceState(savedInstanceState);
     }

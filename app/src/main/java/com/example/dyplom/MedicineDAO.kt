@@ -1,7 +1,7 @@
 package com.example.dyplom
 
 import android.arch.persistence.room.*
-
+import android.arch.persistence.room.Transaction
 
 @Dao
 interface MedicineDAO {
@@ -21,11 +21,21 @@ interface MedicineDAO {
     @Insert
     fun insert(medicine: Medicine)
 
+    //@Insert
+    //fun insertTime(timeOfMedicine: List<TimeOfMedicine>)
+
+
     @Update
     fun update(medicine: Medicine)
 
     //@Delete
     //fun delete(medicine: Medicine)
+
+    /*@Transaction
+    fun insertCarAndEmployee(car: Car, employee: Employee) {
+        insertCar(car)
+        insertEmployee(employee)
+    }*/
 
     @Query("DELETE FROM medicine WHERE id = :id")
     fun deleteById(id: Int)

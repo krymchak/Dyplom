@@ -107,10 +107,10 @@ class MainActivity : AppCompatActivity()
 
     fun sortByTime()
     {
-        var list= listOfMedicine.sortedWith(compareBy({ it.time }))
-        for (i in 0..list.size-1)
-            listOfMedicine[i]=list[i]
-        adapter.updateResults(listOfMedicine)
+        //var list= listOfMedicine.sortedWith(compareBy({ it.time }))
+        //for (i in 0..list.size-1)
+            //listOfMedicine[i]=list[i]
+        //adapter.updateResults(listOfMedicine)
     }
 
 

@@ -7,12 +7,16 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
+import kotlin.collections.ArrayList
 
 class ShowMedicine : AppCompatActivity() {
 
     var id = 0
+    lateinit private var adapter : TimeAdapter
+    lateinit var gridView : GridView
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -35,8 +39,12 @@ class ShowMedicine : AppCompatActivity() {
         val name = findViewById<TextView>(R.id.name)
         name.text = medicine.name
 
-        val time = findViewById<TextView>(R.id.time)
-        time.text = medicine.time
+        var listOfTime = MyDatabase.getInstance(this).TimeOfMedicineDAO().getByMedicineID(id)
+        adapter = TimeAdapter(this, listOfTime as ArrayList<TimeOfMedicine>)
+        gridView = findViewById<GridView>(R.id.gridview)
+        gridView.setAdapter(adapter)
+        //time.text = listOfTime.get(0).time
+        //time.text = medicine.time
 
         var image = findViewById(R.id.image) as ImageView
         val resID = this.resources.getIdentifier(medicine.type, "drawable", this.packageName)

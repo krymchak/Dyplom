@@ -35,6 +35,7 @@ class MedicineManager : BroadcastReceiver() {
         }
 
         val id= intent!!.getIntExtra("id",0)
+        val timeid= intent!!.getIntExtra("timeid",0)
         Log.i("aaaa", id.toString())
         val task = MyDatabase.getInstance(context).MedicineDAO().getById(id)
 
@@ -42,7 +43,7 @@ class MedicineManager : BroadcastReceiver() {
         {
             var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val i = Intent(context, MedicineManager::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(context, id, i, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = PendingIntent.getBroadcast(context, id+timeid, i, PendingIntent.FLAG_UPDATE_CURRENT)
             pendingIntent.cancel()
             alarmManager.cancel(pendingIntent)
             Log.i("usuwanie", id.toString())

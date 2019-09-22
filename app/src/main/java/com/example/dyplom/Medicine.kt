@@ -1,6 +1,8 @@
 package com.example.dyplom
 
+import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.PrimaryKey
 
 
@@ -11,15 +13,15 @@ class Medicine /*: Parcelable*/ {
     @PrimaryKey(autoGenerate = true)
      var id: Int = 0
      var name: String? = null
-     var time: String? = null
+     //var time: String? = null
      var type: String? = null
     // var priority: Int? = null
 
 
-    constructor(id: Int, name: String, time: String, type: String/*, priority: Int*/) {
+    constructor(id: Int, name: String, /*time: String,*/ type: String/*, priority: Int*/) {
         this.id=id
         this.name = name
-        this.time = time
+        //this.time = time
         this.type=type
         //this.priority=priority
     }

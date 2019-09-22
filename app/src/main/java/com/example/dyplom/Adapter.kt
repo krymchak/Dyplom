@@ -13,7 +13,8 @@ class Adapter(private var values: List<Medicine>, private var clickListener: Cli
 {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.name.text = values[position].name
-        holder.time.text = values[position].time
+        var listOfTime = MyDatabase.getInstance(context).TimeOfMedicineDAO().getByMedicineID(values[position].id)
+        holder.time.text = listOfTime.get(0).time
         val type = values[position].type
 
         val resID = context.resources.getIdentifier(type, "drawable", context.packageName)
