@@ -47,7 +47,7 @@
                 android:textAlignment="gravity"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="15sp" android:layout_marginTop="8dp"/>
-        <TextView
+        <!--<TextView
                 android:id="@+id/timer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -55,6 +55,15 @@
                 android:text="A"
                 android:textAlignment="gravity"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="20sp" android:layout_marginTop="0dp" android:layout_marginBottom="8dp"/>
+                android:textSize="20sp" android:layout_marginTop="0dp" android:layout_marginBottom="8dp"/>-->
+        <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/gridview"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:numColumns="2"
+                  android:verticalSpacing="2dp"
+                  android:horizontalSpacing="2dp">
+
+        </GridView>
     </LinearLayout>
 </LinearLayout>

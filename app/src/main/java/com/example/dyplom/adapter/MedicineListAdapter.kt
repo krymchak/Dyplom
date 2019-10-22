@@ -1,4 +1,4 @@
-package com.example.dyplom
+package com.example.dyplom.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -6,17 +6,24 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.dyplom.*
+import com.example.dyplom.entity.Medicine
+import com.example.dyplom.entity.TimeOfMedicine
 
-class Adapter(private var values: List<Medicine>, private var clickListener: ClickListener, private var context: Context): RecyclerView.Adapter<Adapter.ViewHolder>()
+class MedicineListAdapter(private var values: List<Medicine>, private var clickListener: ClickListener, private var context: Context): RecyclerView.Adapter<MedicineListAdapter.ViewHolder>()
 {
+
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.name.text = values[position].name
         var listOfTime = MyDatabase.getInstance(context).TimeOfMedicineDAO().getByMedicineID(values[position].id)
-        holder.time.text = listOfTime.get(0).time
+        var adapter =
+            TimeListAdapter(context, listOfTime as ArrayList<TimeOfMedicine>)
+        holder.gridView.setAdapter(adapter)
         val type = values[position].type
-
         val resID = context.resources.getIdentifier(type, "drawable", context.packageName)
         holder.image.setImageResource(resID)
     }
@@ -33,8 +40,7 @@ class Adapter(private var values: List<Medicine>, private var clickListener: Cli
     class ViewHolder(view: View, private var clickListener: ClickListener) : RecyclerView.ViewHolder(view), View.OnClickListener
     {
         var name: TextView = view.findViewById(R.id.name)
-        var time: TextView = view.findViewById(R.id.timer)
-        //var type : TextView = view.findViewById(R.id.type)
+        var gridView = view.findViewById<GridView>(R.id.gridview)
         var image: ImageView = view.findViewById(R.id.image)
         init
         {

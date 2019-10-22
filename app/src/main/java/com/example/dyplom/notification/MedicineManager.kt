@@ -1,4 +1,4 @@
-package com.example.dyplom
+package com.example.dyplom.notification
 
 import android.app.AlarmManager
 import android.app.NotificationChannel
@@ -10,13 +10,12 @@ import android.content.Intent
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import android.util.Log
-import java.text.SimpleDateFormat
+import com.example.dyplom.MyDatabase
+import com.example.dyplom.activity.NotificationOfMedicineActivity
+import com.example.dyplom.R
 import java.util.*
 
 class MedicineManager : BroadcastReceiver() {
-
-
-    private lateinit var mydatabase : MyDatabase
 
 
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -43,7 +42,9 @@ class MedicineManager : BroadcastReceiver() {
         {
             var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val i = Intent(context, MedicineManager::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(context, id+timeid, i, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pid = ((id+timeid)*(id+timeid+1)+timeid)/2
+            Log.i("AAAAAAAAAAA", pid.toString())
+            val pendingIntent = PendingIntent.getBroadcast(context, pid, i, PendingIntent.FLAG_UPDATE_CURRENT)
             pendingIntent.cancel()
             alarmManager.cancel(pendingIntent)
             Log.i("usuwanie", id.toString())
@@ -62,8 +63,9 @@ class MedicineManager : BroadcastReceiver() {
                 .setAutoCancel(true)
 
             val stackBuilder = TaskStackBuilder.create(context)
-            val intent = Intent(context, NotificationOfMedicine::class.java)
+            val intent = Intent(context, NotificationOfMedicineActivity::class.java)
             intent.putExtra("id",id)
+            intent.putExtra("timeid",timeid)
             stackBuilder.addNextIntent(intent)
             val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
             mBuilder.setContentIntent(resultPendingIntent)

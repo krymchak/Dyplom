@@ -1,11 +1,10 @@
-package com.example.dyplom
+package com.example.dyplom.DAO
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
-import android.arch.persistence.room.Update
 import android.arch.persistence.room.Delete
-
+import com.example.dyplom.entity.TimeOfMedicine
 
 
 @Dao
@@ -19,6 +18,7 @@ interface TimeOfMedicineDAO {
 
     @Insert
     fun insert(times: List<TimeOfMedicine>)
+
 
     @Delete
     fun delete(car: TimeOfMedicine)

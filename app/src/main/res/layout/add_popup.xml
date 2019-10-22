@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent" android:background="#e9e9e9">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView
+                android:text="Dodaj leki"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textAlignment="center" android:textSize="30dp"
+                android:textColor="@color/colorPrimary" android:id="@+id/textView5"/>
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/number"/>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <Button
+                    android:text="dodaj"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/add" android:layout_weight="1"
+                    android:onClick="onClick"/>
+            <Button
+                    android:text="wroc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/cancel" android:layout_weight="1"
+                    android:onClick="onClick"/>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

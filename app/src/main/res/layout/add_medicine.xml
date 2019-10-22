@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".AddMedicine">
+        tools:context=".activity.AddMedicineActivity">
 
     <ScrollView
             android:layout_width="match_parent"
@@ -28,15 +28,15 @@
                     <ImageButton
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" app:srcCompat="@drawable/tablet"
-                            android:id="@+id/tablet" android:layout_weight="1" android:onClick="typ"/>
+                            android:id="@+id/tablet" android:layout_weight="1" android:onClick="type"/>
                     <ImageButton
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" app:srcCompat="@drawable/capsule"
-                            android:id="@+id/capsule" android:layout_weight="1" android:onClick="typ"/>
+                            android:id="@+id/capsule" android:layout_weight="1" android:onClick="type"/>
                     <ImageButton
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" app:srcCompat="@drawable/drops"
-                            android:id="@+id/drops" android:layout_weight="1" android:onClick="typ"
+                            android:id="@+id/drops" android:layout_weight="1" android:onClick="type"
                             android:visibility="visible"/>
                 </TableRow>
                 <TableRow android:layout_width="match_parent" android:layout_height="match_parent"
@@ -44,30 +44,30 @@
                     <ImageButton
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" app:srcCompat="@drawable/injection"
-                            android:id="@+id/injection" android:layout_weight="1" android:onClick="typ"/>
+                            android:id="@+id/injection" android:layout_weight="1" android:onClick="type"/>
                     <ImageButton
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" app:srcCompat="@drawable/ointment"
-                            android:id="@+id/ointment" android:layout_weight="1" android:onClick="typ"/>
+                            android:id="@+id/ointment" android:layout_weight="1" android:onClick="type"/>
                     <ImageButton
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" app:srcCompat="@drawable/syrup"
-                            android:id="@+id/syrup" android:layout_weight="1" android:onClick="typ"/>
+                            android:id="@+id/syrup" android:layout_weight="1" android:onClick="type"/>
                 </TableRow>
                 <TableRow android:layout_width="match_parent" android:layout_height="match_parent"
                           android:layout_weight="1">
                     <ImageButton
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" app:srcCompat="@drawable/spoon"
-                            android:id="@+id/spoon" android:layout_weight="1" android:onClick="typ"/>
+                            android:id="@+id/spoon" android:layout_weight="1" android:onClick="type"/>
                     <ImageButton
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" app:srcCompat="@drawable/spray"
-                            android:id="@+id/spray" android:layout_weight="1" android:onClick="typ"/>
+                            android:id="@+id/spray" android:layout_weight="1" android:onClick="type"/>
                     <ImageButton
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" app:srcCompat="@drawable/inhalator"
-                            android:id="@+id/inhalator" android:layout_weight="1" android:onClick="typ"
+                            android:id="@+id/inhalator" android:layout_weight="1" android:onClick="type"
                             android:visibility="visible"/>
                 </TableRow>
             </TableLayout>
@@ -82,24 +82,66 @@
                     android:layout_weight="1.1" android:contentDescription="Tytul zadania"/>
 
             <Button
-                    android:text="dodaj czas"
+                    android:text="ustaw czas"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/add_time" android:layout_weight="1.1"
-                    android:onClick="add_time"/>
-            <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:id="@+id/gridview"
-                      android:layout_width="match_parent"
-                      android:layout_height="match_parent"
-                      android:numColumns="3"
-                      android:verticalSpacing="2dp"
-                      android:horizontalSpacing="2dp">
+                    android:onClick="onClick"/>
+            <GridView
+                android:id="@+id/gridview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:numColumns="3"
+                android:verticalSpacing="2dp"
+                android:horizontalSpacing="2dp">
 
-            </GridView>
+        </GridView>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:layout_weight="1.1">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:id="@+id/textView2" android:layout_weight="1" android:text="dostępna ilość"/>
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="number"
+                        android:ems="10"
+                        android:id="@+id/available_quantity" android:layout_weight="1"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:layout_weight="1.1">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:id="@+id/textView3" android:layout_weight="1" android:text="ilość w kursie"/>
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="number"
+                        android:ems="10"
+                        android:id="@+id/required_amount" android:layout_weight="1"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:layout_weight="1.1">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:id="@+id/textView4" android:layout_weight="1" android:text="dawka"/>
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="numberDecimal"
+                        android:ems="10"
+                        android:id="@+id/dose" android:layout_weight="1"/>
+            </LinearLayout>
             <Button
                     android:text="Dodaj"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:id="@+id/button" android:layout_weight="1.1"
-                    android:onClick="add" style="@android:style/Widget.Button"/>
+                    android:layout_height="match_parent" android:id="@+id/add" android:layout_weight="1.1"
+                    android:onClick="onClick" style="@android:style/Widget.Button"/>
         </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

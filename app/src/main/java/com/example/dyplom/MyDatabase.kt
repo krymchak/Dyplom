@@ -4,10 +4,14 @@ import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.content.Context
+import com.example.dyplom.DAO.MedicineDAO
+import com.example.dyplom.DAO.TimeOfMedicineDAO
+import com.example.dyplom.entity.Medicine
+import com.example.dyplom.entity.TimeOfMedicine
 
 
 //@Database(entities = [Medicine::class, TimeOfMedicine::class], version = 14)
-@Database(entities = [Medicine::class, TimeOfMedicine::class], version = 1)
+@Database(entities = [Medicine::class, TimeOfMedicine::class], version = 6)
 abstract class MyDatabase : RoomDatabase() {
     abstract fun MedicineDAO(): MedicineDAO
     abstract fun TimeOfMedicineDAO(): TimeOfMedicineDAO
