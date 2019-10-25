@@ -55,9 +55,17 @@ class ShowMedicineActivity : AppCompatActivity(), ShowMedicineView {
         val name = findViewById<TextView>(R.id.name)
         name.text = medicine.name
 
+        val available_quantity = findViewById<TextView>(R.id.available_quantity)
+        available_quantity.text = medicine.available_quantity.toString()
+
+        val required_amount = findViewById<TextView>(R.id.required_amount)
+        required_amount.text = medicine.required_amount.toString()
+
         listAdapter = TimeListAdapter(this, listOfTime)
         gridView = findViewById<GridView>(R.id.gridview)
         gridView.setAdapter(listAdapter)
+
+
 
         var image = findViewById(R.id.image) as ImageView
         val resID = this.resources.getIdentifier(medicine.type, "drawable", this.packageName)

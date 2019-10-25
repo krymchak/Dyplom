@@ -1,9 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          xmlns:map="http://schemas.android.com/apk/res-auto"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:id="@+id/map"
-          tools:context=".maps.MapsActivity"
-          android:name="com.google.android.gms.maps.SupportMapFragment"/>
+<RelativeLayout
+
+        android:layout_width="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:layout_weight="1">
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:layout_weight="10"
+            android:onClick="onClick">
+        <Button
+            android:id="@+id/pharmacy"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Znajdz apteki"
+            android:onClick="onClick"/>
+        <Button
+                android:id="@+id/hospital"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Znajdz szpitale"
+                android:onClick="onClick"/>
+    </LinearLayout>
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:tools="http://schemas.android.com/tools"
+                  xmlns:map="http://schemas.android.com/apk/res-auto"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:id="@+id/map"
+                  tools:context=".activity.MapsActivity"
+                  android:name="com.google.android.gms.maps.SupportMapFragment"
+                  android:layout_weight="1"/>
+    </LinearLayout>
+
+
+
+</RelativeLayout>

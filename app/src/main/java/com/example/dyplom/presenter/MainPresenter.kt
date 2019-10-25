@@ -30,5 +30,9 @@ class MainPresenter {
         listOfMedicineView.toAddMedicineActivity()
     }
 
+    fun addMapClicked() {
+        listOfMedicineView.openMap()
+    }
+
 
 }

@@ -23,6 +23,7 @@ class MedicineListAdapter(private var values: List<Medicine>, private var clickL
         var adapter =
             TimeListAdapter(context, listOfTime as ArrayList<TimeOfMedicine>)
         holder.gridView.setAdapter(adapter)
+        holder.gridView.isEnabled = false
         val type = values[position].type
         val resID = context.resources.getIdentifier(type, "drawable", context.packageName)
         holder.image.setImageResource(resID)

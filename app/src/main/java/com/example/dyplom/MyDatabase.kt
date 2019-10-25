@@ -11,7 +11,7 @@ import com.example.dyplom.entity.TimeOfMedicine
 
 
 //@Database(entities = [Medicine::class, TimeOfMedicine::class], version = 14)
-@Database(entities = [Medicine::class, TimeOfMedicine::class], version = 6)
+@Database(entities = [Medicine::class, TimeOfMedicine::class], version = 7)
 abstract class MyDatabase : RoomDatabase() {
     abstract fun MedicineDAO(): MedicineDAO
     abstract fun TimeOfMedicineDAO(): TimeOfMedicineDAO

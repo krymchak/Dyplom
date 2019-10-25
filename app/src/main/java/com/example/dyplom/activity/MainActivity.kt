@@ -2,6 +2,7 @@ package com.example.dyplom.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -9,6 +10,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import com.example.dyplom.R
 import com.example.dyplom.adapter.MedicineListAdapter
 import com.example.dyplom.entity.Medicine
@@ -19,9 +21,11 @@ import com.example.dyplom.view.ListOfMedicineView
 class MainActivity : AppCompatActivity(), ListOfMedicineView
 {
 
+
     val mainPresenter = MainPresenter(this)
     var listOfMedicine: List<Medicine> = arrayListOf()
     private lateinit var medicineListAdapter: MedicineListAdapter
+    private var doubleBackToExitPressedOnce = false
 
 
     override fun onCreate(savedInstanceState: Bundle?)
@@ -43,7 +47,15 @@ class MainActivity : AppCompatActivity(), ListOfMedicineView
     }
 
     override fun onBackPressed() {
-        finish()
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed()
+            return
+        }
+
+        this.doubleBackToExitPressedOnce = true
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
+
+        Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
     }
 
 
@@ -99,6 +111,7 @@ class MainActivity : AppCompatActivity(), ListOfMedicineView
         when (v?.id)
         {
              R.id.add -> {mainPresenter.addButtonClicked()}
+                R.id.mapa -> {mainPresenter.addMapClicked()}
         }
 
     }
@@ -106,6 +119,11 @@ class MainActivity : AppCompatActivity(), ListOfMedicineView
     override fun toAddMedicineActivity()
     {
         val intent = Intent(this, AddMedicineActivity::class.java)
+        startActivityForResult(intent, 1)
+    }
+
+    override fun openMap() {
+        val intent = Intent(this, MapsActivity::class.java)
         startActivityForResult(intent, 1)
     }
 
