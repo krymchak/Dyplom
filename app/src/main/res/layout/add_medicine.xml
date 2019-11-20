@@ -14,11 +14,14 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
             <TextView
-                    android:text="Wybierz typ zadania"
-                    android:textSize="26dp"
+                    android:id="@+id/textView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:id="@+id/textView" android:layout_weight="1.1"/>
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.1"
+                    android:text="Wybierz typ leku"
+                    android:textSize="26dp" />
             <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" android:layout_weight="4">
@@ -31,31 +34,20 @@
                             android:id="@+id/tablet" android:layout_weight="1" android:onClick="type"/>
                     <ImageButton
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" app:srcCompat="@drawable/capsule"
-                            android:id="@+id/capsule" android:layout_weight="1" android:onClick="type"/>
-                    <ImageButton
-                            android:layout_width="match_parent"
                             android:layout_height="match_parent" app:srcCompat="@drawable/drops"
                             android:id="@+id/drops" android:layout_weight="1" android:onClick="type"
                             android:visibility="visible"/>
-                </TableRow>
-                <TableRow android:layout_width="match_parent" android:layout_height="match_parent"
-                          android:layout_weight="1">
                     <ImageButton
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" app:srcCompat="@drawable/injection"
                             android:id="@+id/injection" android:layout_weight="1" android:onClick="type"/>
+                </TableRow>
+                <TableRow android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:layout_weight="1">
                     <ImageButton
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" app:srcCompat="@drawable/ointment"
                             android:id="@+id/ointment" android:layout_weight="1" android:onClick="type"/>
-                    <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" app:srcCompat="@drawable/syrup"
-                            android:id="@+id/syrup" android:layout_weight="1" android:onClick="type"/>
-                </TableRow>
-                <TableRow android:layout_width="match_parent" android:layout_height="match_parent"
-                          android:layout_weight="1">
                     <ImageButton
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" app:srcCompat="@drawable/spoon"
@@ -64,11 +56,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" app:srcCompat="@drawable/spray"
                             android:id="@+id/spray" android:layout_weight="1" android:onClick="type"/>
-                    <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" app:srcCompat="@drawable/inhalator"
-                            android:id="@+id/inhalator" android:layout_weight="1" android:onClick="type"
-                            android:visibility="visible"/>
                 </TableRow>
             </TableLayout>
             <EditText
@@ -113,9 +100,13 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" android:layout_weight="1.1">
+
                 <TextView
+                        android:id="@+id/textView3"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" android:id="@+id/textView3" android:layout_weight="1" android:text="ilość w kursie"/>
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="potrzebna ilość" />
                 <EditText
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

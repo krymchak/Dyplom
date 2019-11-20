@@ -19,6 +19,7 @@ class AddMedicinePresenter {
     val medicineDAO = MyDatabase.getInstance(context).MedicineDAO()
     val timeOfMedicineDAO = MyDatabase.getInstance(context).TimeOfMedicineDAO()
     val addMedicineView: AddMedicineView
+    var timeid= timeOfMedicineDAO.maxId()+1
 
     constructor(addMedicineView: AddMedicineView)
     {
@@ -32,7 +33,7 @@ class AddMedicinePresenter {
         setTimeToCalendar(calendar, time.hour, time.minute)
         val i = Intent(context, MedicineManager::class.java)
         var medicineId=time.medicineId
-        var timeid=time.TimeId
+        var timeid=time.timeId
         i.putExtra("id", medicineId)
         i.putExtra("timeid", timeid)
         val pid = ((medicineId!!+timeid)*(medicineId!!+timeid+1)+timeid)/2
@@ -61,9 +62,10 @@ class AddMedicinePresenter {
     {
         //val calendar = Calendar.getInstance()
         //setTimeToCalendar(calendar, hour, minute)
-        val id = medicineDAO.max() + 1
-        val timeid= timeOfMedicineDAO.max()+1
+        val id = medicineDAO.maxId() + 1
+
         val newTime= TimeOfMedicine(timeid, id, hour, minute)
+        timeid++
         //createNotification(calendar, id, timeid)
 
         addMedicineView.setTime(newTime)

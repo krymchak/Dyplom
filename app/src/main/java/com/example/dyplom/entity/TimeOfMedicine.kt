@@ -10,7 +10,7 @@ import android.os.Parcelable
     parentColumns = arrayOf("id"),
     childColumns = arrayOf("medicineId"),
     onDelete = ForeignKey.CASCADE)))
-class TimeOfMedicine(@PrimaryKey(autoGenerate = true) var TimeId: Int, medicineId: Int, hour: Int, minute: Int) : Parcelable {
+class TimeOfMedicine(@PrimaryKey(autoGenerate = true) var timeId: Int, medicineId: Int, hour: Int, minute: Int) : Parcelable {
 
     var medicineId: Int? = medicineId
     //var time: String? = time
@@ -31,7 +31,7 @@ class TimeOfMedicine(@PrimaryKey(autoGenerate = true) var TimeId: Int, medicineI
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(TimeId)
+        parcel.writeInt(timeId)
         parcel.writeValue(medicineId)
         parcel.writeInt(hour)
         parcel.writeInt(minute)

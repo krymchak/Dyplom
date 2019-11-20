@@ -27,4 +27,12 @@ class NeedBuyPresenter {
         return medicineDAO.getById(id)
     }
 
+    fun onAcceptButtonClick() {
+        needBuyView.returnToMainActivity()
+    }
+
+    fun onLaterButtonClick() {
+        needBuyView.goToMap()
+    }
+
 }

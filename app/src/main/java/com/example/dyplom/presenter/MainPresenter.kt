@@ -34,5 +34,9 @@ class MainPresenter {
         listOfMedicineView.openMap()
     }
 
+    fun historyClicked() {
+        listOfMedicineView.openHistory()
+    }
+
 
 }

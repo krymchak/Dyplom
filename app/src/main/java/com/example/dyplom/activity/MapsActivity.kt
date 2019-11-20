@@ -27,6 +27,9 @@ import android.content.Context.LOCATION_SERVICE
 import android.support.v4.content.ContextCompat.getSystemService
 import android.location.LocationManager
 import android.content.Context
+import android.content.Intent
+import android.os.Handler
+import com.google.android.gms.maps.model.MarkerOptions
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -36,13 +39,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleApiClient.Co
     private lateinit var client: GoogleApiClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var  lastlocation: Location
-    private var currentLocationmMarker: Marker? = null
+    private var currentLocationMarker: Marker? = null
     private val REQUEST_LOCATION_CODE = 99
 
     var PROXIMITY_RADIUS = 10000
-    var latitude: Double = 0.toDouble()
-    var longitude: Double = 0.toDouble()
+    var latitude: Double = 0.0
+    var longitude: Double = 0.0
 
+    /*
+     * Funkcja do tworzenia widoku
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
@@ -52,59 +58,87 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleApiClient.Co
             checkLocationPermission();
 
         }
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
 
-
+    /*
+     * Funkcja wyswietlająca mapę i pokazująca lokalizacje
+     * parametr: googleMap - mapa
+     */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            buildGoogleAdiClient()
+            buildGoogleApiClient()
             mMap.setMyLocationEnabled(true)
 
         }
 
-        var point = CameraUpdateFactory.newLatLng(getMyLocation())
+        val LatLng = getMyLocation()
+        if(LatLng!=null)
+        {
+            var point = CameraUpdateFactory.newLatLng(LatLng)
 
-        mMap.moveCamera(point)
-        mMap.animateCamera(point)
+            mMap.moveCamera(point)
+            mMap.animateCamera(point)
+        }
     }
 
-    private fun getMyLocation(): LatLng
+    /*
+     * Funkcja zwracająca obecną lokalizacje
+     * return: obecna lokalizacja użytkownika lub null, jesli lokalizację nie udało się odczytać
+     */
+    private fun getMyLocation(): LatLng?
     {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            val criteria = Criteria()
+            if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                Toast.makeText(this,"Włacz GPS" , Toast.LENGTH_LONG).show();
 
-            val location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false))
-            val myLatitude = location.latitude - 0.05
-            val myLongitude = location.longitude
+            }
+            else {
+                val criteria = Criteria()
 
-            return LatLng(myLatitude, myLongitude)
+                val location = locationManager.getLastKnownLocation(
+                    locationManager.getBestProvider(
+                        criteria,
+                        false
+                    )
+                )
+                val myLatitude = location.latitude - 0.05
+                val myLongitude = location.longitude
+
+                return LatLng(myLatitude, myLongitude)
+            }
         }
-        return LatLng(0.0, 0.0)
+        return null
     }
 
+    /*
+    * Finkcja budująca GoogleApiClient
+     */
     @Synchronized
-    protected fun buildGoogleAdiClient() {
+    protected fun buildGoogleApiClient() {
         client = GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this)
             .addApi(LocationServices.API).build()
         client.connect()
 
     }
 
+    /*
+     * Finkcja zmienająca obecną lokalicję
+     * parametr: location- nowa lokalizacja
+     */
     override fun onLocationChanged(location: Location) {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         lastlocation = location
 
-        if(currentLocationmMarker != null)
+        if(currentLocationMarker != null)
         {
-            currentLocationmMarker!!.remove()
+            currentLocationMarker!!.remove()
 
         }
 
@@ -120,6 +154,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleApiClient.Co
         }
     }
 
+    /*
+     * Funkcja sprawdzająca uprawnienia
+     * return: false - nie ma uprawnien, true - są uprawnienia
+     */
     private fun checkLocationPermission(): Boolean {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -134,14 +172,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleApiClient.Co
             return true
     }
 
-
+    /*
+     * Funkcja, która  przypadku, gdy połączenie nie udało się wyswietla komunikat
+     */
     override fun onConnectionFailed(p0: ConnectionResult) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Toast.makeText(this,"Connection failed " + p0, Toast.LENGTH_LONG).show();
     }
 
 
+    /*
+     * Funkcja, która  przypadku, gdy połączenie zawiesiło się  wyswietla komunikat i próbuję się połączyć
+     */
     override fun onConnectionSuspended(p0: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Toast.makeText(this,"Trying to reconnect." , Toast.LENGTH_LONG).show();
+        client.connect();
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -153,7 +197,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleApiClient.Co
                     {
                         if(client == null)
                         {
-                            buildGoogleAdiClient();
+                            buildGoogleApiClient();
                         }
                         mMap.isMyLocationEnabled = true
                     }
@@ -178,9 +222,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleApiClient.Co
         }
     }
 
+    /*
+     * Funkcja zarządzająca przyciskami
+     * parametr: v - element sterujący przyciskiem
+     */
     fun onClick(v: View)
     {
-        //var dataTransfer = arrayOf<Object>()
         val getNearbyPlacesData = GetNearbyPlacesData()
         when(v.getId())
         {
@@ -205,6 +252,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleApiClient.Co
         }
     }
 
+    /*
+    * Funkcja tworząca zapytanie dla Google Place API
+    * parametr: latitude, longitude - lokalizacja
+    * parametr: nearbyPlace - typ szukanego miejsca
+    * return: string zapytania
+     */
     private fun getUrl(latitude: Double, longitude: Double, nearbyPlace: String): String {
 
         val googlePlaceUrl = StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?")
@@ -213,11 +266,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleApiClient.Co
         googlePlaceUrl.append("&type=$nearbyPlace")
         googlePlaceUrl.append("&sensor=true")
         googlePlaceUrl.append("&key=" + "AIzaSyCMBtI68i5gms4-WG6U_ekZZB54pvaoGq4")
-       /* https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=51.10,16.93&radius=100000&type=hospital&sensor=true&key=AIzaSyCMBtI68i5gms4-WG6U_ekZZB54pvaoGq4*/
-        Log.d("MapsActivity", "url = $googlePlaceUrl")
-        Log.i("aaaaaa", googlePlaceUrl.toString())
         return googlePlaceUrl.toString()
-        //return "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=51.10,16.93&radius=100000&type=hospital&sensor=true&key=AIzaSyCMBtI68i5gms4-WG6U_ekZZB54pvaoGq4"
+    }
+
+    /*
+    * Funkcja wywolująca się przy wcisnięciu przycisku back. Otwiera widok glówny
+    */
+    override fun onBackPressed() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
     }
 
 }
+

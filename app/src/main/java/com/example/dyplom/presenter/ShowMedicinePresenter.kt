@@ -32,11 +32,10 @@ class ShowMedicinePresenter{
     }
 
     fun editMedicine(id: Int){
-        //medicineDAO.deleteById(id)
-        //showMedicineView.returnToMainActivity()
+        showMedicineView.edit(id)
     }
 
-    fun addMedicine() {
-        showMedicineView.addMedicine()
+    fun addAvailableQuantity() {
+        showMedicineView.addAvailableQuantity()
     }
 }

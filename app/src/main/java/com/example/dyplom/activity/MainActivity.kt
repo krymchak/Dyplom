@@ -18,16 +18,23 @@ import com.example.dyplom.presenter.MainPresenter
 import com.example.dyplom.view.ListOfMedicineView
 
 
-class MainActivity : AppCompatActivity(), ListOfMedicineView
-{
-
+class MainActivity : AppCompatActivity(), ListOfMedicineView {
 
     val mainPresenter = MainPresenter(this)
+
+    // lista leków
     var listOfMedicine: List<Medicine> = arrayListOf()
+
+    // adapter do wyswietlania listy leków
     private lateinit var medicineListAdapter: MedicineListAdapter
+
+    // zmienna przechowująca dane o tym, czy przycisk powrotu był już wcisnięty
     private var doubleBackToExitPressedOnce = false
 
 
+    /*
+     * Funkcja do tworzenia widoku
+     */
     override fun onCreate(savedInstanceState: Bundle?)
     {
 
@@ -36,16 +43,31 @@ class MainActivity : AppCompatActivity(), ListOfMedicineView
 
         val mActionBarToolbar = findViewById<Toolbar>(R.id.my_toolbar)
         setSupportActionBar(mActionBarToolbar)
-
         showListOfMedicine()
     }
 
+    /*
+     * Funkcja do przejścia do widoku mapy
+     */
+    override fun openHistory() {
+        val intent = Intent(this, HistoryActivity::class.java)
+        startActivityForResult(intent, 2)
+    }
+
+    /*
+     * Funkcja pobierająca dane po odswieżeniu widoku
+     */
     override fun onStart() {
         super.onStart()
         listOfMedicine = mainPresenter.getListOfMedicine()
-        medicineListAdapter.updateResults(listOfMedicine)
+        medicineListAdapter.updateList(listOfMedicine)
     }
 
+    /*
+     * Funkcja wywolująca się przy wcisnięciu przycisku back
+     * Gdy przycisk jest wcisnięty pierwszy raz wyswietla komunikat
+     * Gdy przycisk jest wcisnięty drugi raz zamyka apkikacje
+     */
     override fun onBackPressed() {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed()
@@ -58,23 +80,42 @@ class MainActivity : AppCompatActivity(), ListOfMedicineView
         Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
     }
 
-
+    /*
+     * Funkcja do tworzenia menu
+     * parametr: menu - tworzone menu
+     */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
     }
 
+    /*
+     * Funkcja do zarządzania elementami menu
+     */
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-
+        super.onOptionsItemSelected(item)
         when (item?.itemId)
         {
             // R.id.sortByName -> {medicineListAdapter.setTypeOfSort("N")}
-            //  R.id.sortByTime -> {medicineListAdapter.setTypeOfSort("T")}
+            // R.id.sortByTime -> {medicineListAdapter.setTypeOfSort("T")}
+            R.id.show_all -> {medicineListAdapter.setType("all")}
+            R.id.tablet -> {medicineListAdapter.setType("tablet")}
+            R.id.drops -> {medicineListAdapter.setType("drops")}
+            R.id.injection -> {medicineListAdapter.setType("injection")}
+            R.id.ointment -> {medicineListAdapter.setType("ointment")}
+            R.id.spoon -> {medicineListAdapter.setType("spoon")}
+            R.id.spray -> {medicineListAdapter.setType("spray")}
+
+            R.id.map -> {mainPresenter.addMapClicked()}
+            R.id.history -> {mainPresenter.historyClicked()}
+
         }
         return super.onOptionsItemSelected(item)
     }
 
-
+    /*
+    * Funkcja do wyswietlenia listy leków
+     */
     private fun showListOfMedicine()
     {
         val recyclerView = findViewById<RecyclerView>(R.id.list)
@@ -83,45 +124,60 @@ class MainActivity : AppCompatActivity(), ListOfMedicineView
             MedicineListAdapter(emptyList(), object : MedicineListAdapter.ClickListener {
                 override fun onItemClick(position: Int) {
                     openMedicine(position)
-
                 }
             }, this)
         recyclerView.adapter = medicineListAdapter
         listOfMedicine = mainPresenter.getListOfMedicine()
-        medicineListAdapter.updateResults(listOfMedicine)
+        medicineListAdapter.updateList(listOfMedicine)
     }
 
 
-
-    fun openMedicine(pos: Int)
+    /*
+     * Funkcja pokazująca lek z listy
+     * parametr: id - id leku
+     */
+    fun openMedicine(id: Int)
     {
-        mainPresenter.openMedicine(pos)
+        mainPresenter.openMedicine(id)
     }
 
+    /*
+     * Funkcja otwierająca widok z informacją o leku
+     * parametr: pos - pozycja leku w liście
+     */
     override fun toMedicineActicity(pos: Int)
     {
         val intent = Intent(this, ShowMedicineActivity::class.java)
-        intent.putExtra("id", listOfMedicine[pos].id)
+        intent.putExtra("id", medicineListAdapter.getId(pos))
         startActivityForResult(intent, 2)
     }
 
-
+    /*
+     * Funkcja zarządzająca przyciskami
+     * parametr: v - element sterujący przyciskiem
+     */
     fun onClick(v: View)
     {
         when (v?.id)
         {
              R.id.add -> {mainPresenter.addButtonClicked()}
-                R.id.mapa -> {mainPresenter.addMapClicked()}
+
         }
 
     }
 
+    /*
+    * Funkcja do przejścia do widoku dodawania leku
+    */
     override fun toAddMedicineActivity()
     {
         val intent = Intent(this, AddMedicineActivity::class.java)
         startActivityForResult(intent, 1)
     }
 
+    /*
+    * Funkcja do przejścia do widoku mapy
+    */
     override fun openMap() {
         val intent = Intent(this, MapsActivity::class.java)
         startActivityForResult(intent, 1)

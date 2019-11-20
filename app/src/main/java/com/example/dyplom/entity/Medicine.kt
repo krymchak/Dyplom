@@ -28,16 +28,28 @@ class Medicine  {
         this.dose=dose
     }
 
-    fun numberOfAvailableReceptions(): Float
+    /*
+     * Funkcja, która obliczą ile zostało dostępnych dawek
+     * return: dostępne dawki
+     */
+    private fun numberOfAvailableReceptions(): Float
     {
         return available_quantity/dose;
     }
 
-    fun numberOfRequiredReceptions(): Float
+    /*
+     * Funkcja, która obliczą ile zostało potrzebnych do przyjęcia dawek
+     * return: potrzebne dawki
+     */
+    private fun numberOfRequiredReceptions(): Float
     {
         return required_amount/dose;
     }
 
+    /*
+     * Funkcja, która sprawdza, czy nie trzeba dokupić lek
+     * return: true - trzeba dokupic, false - nie trzeba
+     */
     fun isNeedBuy(): Boolean
     {
         if (numberOfAvailableReceptions()<numberOfRequiredReceptions() && numberOfAvailableReceptions()<=6)

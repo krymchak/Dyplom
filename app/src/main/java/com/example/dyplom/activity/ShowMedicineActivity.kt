@@ -1,7 +1,9 @@
 package com.example.dyplom.activity
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
@@ -19,17 +21,25 @@ import kotlin.collections.ArrayList
 
 class ShowMedicineActivity : AppCompatActivity(), ShowMedicineView {
 
-    val showMedicinePresenter = ShowMedicinePresenter(this)
 
-    lateinit var medicine: Medicine
+    private val showMedicinePresenter = ShowMedicinePresenter(this)
 
-    var listOfTime: ArrayList<TimeOfMedicine> = arrayListOf()
+    // lek
+    private lateinit var medicine: Medicine
 
+    // lista czasów przyjmowania leku
+    private var listOfTime: ArrayList<TimeOfMedicine> = arrayListOf()
 
-    var id = 0
-    lateinit private var listAdapter : TimeListAdapter
-    lateinit var gridView : GridView
+    // id leku
+    private var id = 0
 
+    // GridView do pokazania wprowadzonych czasów oraz adapter do niego
+    private lateinit var gridView : GridView
+    private lateinit var listAdapter : TimeListAdapter
+
+    /*
+    * Funkcja do tworzenia widoku
+    */
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -43,14 +53,20 @@ class ShowMedicineActivity : AppCompatActivity(), ShowMedicineView {
 
     }
 
-    fun getInformation()
+    /*
+     * Funkcja pobierająca informacje o leku
+     */
+    private fun getInformation()
     {
         id = intent.getIntExtra("id",0)
         medicine = showMedicinePresenter.getMedicine(id)
         listOfTime = showMedicinePresenter.getTimeOfMedicine(id) as ArrayList<TimeOfMedicine>
     }
 
-    fun setInformation()
+    /*
+     * Funkcja do ustawienia informacji o leku
+     */
+    private fun setInformation()
     {
         val name = findViewById<TextView>(R.id.name)
         name.text = medicine.name
@@ -73,34 +89,85 @@ class ShowMedicineActivity : AppCompatActivity(), ShowMedicineView {
 
     }
 
+    /*
+     * Funkcja do tworzenia menu
+     * parametr: menu - tworzone menu
+     */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.medicine_menu, menu)
         return true
     }
 
-
-
-    override fun addMedicine()
+    /*
+     * Funkcja do przejścia do widoku AddPopup
+     */
+    override fun addAvailableQuantity()
     {
         val intent = Intent(this, AddPopupActivity::class.java)
         intent.putExtra("id", id)
         startActivityForResult(intent, 0)
     }
 
+    /*
+     * Funkcja do zarządzania elementami menu
+     */
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 
         when (item?.itemId)
         {
-            R.id.delete -> {showMedicinePresenter.deleteMedicine(id)}
+            R.id.delete -> {showDialog() }
             R.id.edit -> {showMedicinePresenter.editMedicine(id)}
-            R.id.add -> {showMedicinePresenter.addMedicine()}
+            R.id.add -> {showMedicinePresenter.addAvailableQuantity()}
         }
         return super.onOptionsItemSelected(item)
     }
 
+    /*
+     * Funkcja do powrotu do widoku głównego
+     */
     override fun returnToMainActivity()
     {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+    }
+
+    /*
+     * Funkcja do przejścia do widoku edytowania leku
+     * parametr: id - id edytowanego leku
+     */
+    override fun edit(id: Int) {
+        val intent = Intent(this, EditMedicineActivity::class.java)
+        intent.putExtra("id", id)
+        startActivityForResult(intent, 0)
+    }
+
+    /*
+     * Funkcja odswieżająca dane po pokazaniu AddPopup
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        getInformation()
+        setInformation()
+    }
+
+    /*
+     * Funkcja pokazująca dialog z pytaniem o usuwaniu leku
+     */
+    private fun showDialog(){
+        lateinit var dialog: AlertDialog
+
+        val builder = AlertDialog.Builder(this)
+
+        builder.setTitle("Usunąc lek?")
+
+        val dialogClickListener = DialogInterface.OnClickListener{ _, which ->
+            when(which){
+                DialogInterface.BUTTON_POSITIVE -> showMedicinePresenter.deleteMedicine(id)
+            }
+        }
+
+        builder.setPositiveButton("TAK",dialogClickListener)
+        builder.setNegativeButton("NIE",dialogClickListener)
+        dialog = builder.create()
+        dialog.show()
     }
 }

@@ -1,11 +1,8 @@
 package com.example.dyplom.maps
 
-import android.util.Log
 import org.json.JSONException
 import org.json.JSONObject
 import org.json.JSONArray
-
-
 
 class DataParser {
 
@@ -16,9 +13,6 @@ class DataParser {
         var latitude = ""
         var longitude = ""
         var reference = ""
-
-        Log.d("DataParser", "jsonobject =$googlePlaceJson")
-
 
         try {
             if (!googlePlaceJson.isNull("name")) {
@@ -68,8 +62,6 @@ class DataParser {
     fun parse(jsonData: String): List<HashMap<String, String>> {
         var jsonArray: JSONArray? = null
         val jsonObject: JSONObject
-
-        Log.d("json data", jsonData)
 
         try {
             jsonObject = JSONObject(jsonData)

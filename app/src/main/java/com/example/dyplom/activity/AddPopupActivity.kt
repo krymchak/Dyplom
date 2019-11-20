@@ -6,20 +6,21 @@ import android.util.DisplayMetrics
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
-import com.example.dyplom.MyDatabase
 import com.example.dyplom.R
-import com.example.dyplom.presenter.AddMedicinePresenter
 import com.example.dyplom.presenter.AddPopupPresenter
 import com.example.dyplom.view.AddPopupView
 
-public class AddPopupActivity: Activity(), AddPopupView{
+class AddPopupActivity: Activity(), AddPopupView{
 
     val addPopupPresenter = AddPopupPresenter(this)
 
-
+    // Zmienne do przechowywania wprowadzonych danych
     var id = 0
     var number: Float = 0f
 
+    /*
+     * Funkcja do tworzenia widoku
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -29,6 +30,9 @@ public class AddPopupActivity: Activity(), AddPopupView{
         id = intent.getIntExtra("id",0)
     }
 
+    /*
+     * Funkcja do ustawienia rozmiarów widoku
+     */
     private fun setSizeWindow()
     {
         var dm = DisplayMetrics()
@@ -38,7 +42,9 @@ public class AddPopupActivity: Activity(), AddPopupView{
         window.setLayout((width*0.6).toInt(), (height*0.3).toInt())
     }
 
-
+    /*
+     * Funkcja, pobierające dane o dodawanej ilości leku
+     */
     override fun getData()
     {
         var editText = findViewById(R.id.number) as EditText
@@ -50,17 +56,28 @@ public class AddPopupActivity: Activity(), AddPopupView{
         number = editText.text.toString().toFloat()
     }
 
+    /*
+     * Funkcja, zapisująca dane o dodawanej ilości leku
+     * Po jej wykonaniu aktywność konczy swoje działanie
+     */
     override fun setData()
     {
         addPopupPresenter.addAvailableQuantity(number, id)
         finish()
     }
 
+    /*
+     * Funkcja, po wykonaniu której aktywność konczy swoje działanie
+     */
     override fun cancel()
     {
         finish()
     }
 
+    /*
+     * Funkcja zarządzająca przyciskami
+     * parametr: v - element sterujący przyciskiem
+     */
     fun onClick(v: View)
     {
         when (v?.id)

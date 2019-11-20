@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Sortowac po nazwie" android:id="@+id/sortByName"/>
-    <item android:title="Sortowac po czasie" android:id="@+id/sortByTime"/>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/filter"
+            android:title="Filtrować">
+        <menu>
+            <item android:id="@+id/show_all"
+                    android:title="Pokaż wszystkie" />
+            <item android:id="@+id/tablet"
+                    android:title="Pigułki" />
+            <item android:id="@+id/drops"
+                    android:title="Kaple" />
+            <item android:id="@+id/injection"
+                    android:title="Zastrzyki" />
+            <item android:id="@+id/ointment"
+                    android:title="Maść" />
+            <item android:id="@+id/spoon"
+                    android:title="Syrop" />
+            <item android:id="@+id/spray"
+                    android:title="Spray" />
+        </menu>
+    </item>
+<item
+        android:id="@+id/history"
+        android:title="Historia" />
+<item
+        android:id="@+id/map"
+        android:icon="@android:drawable/ic_menu_mapmode"
+        android:title="Mapa"
+        app:showAsAction="always" />
 </menu>

@@ -17,22 +17,13 @@ class AddPopupPresenter{
         this.addPopupView=addPopupView
     }
 
-    fun getMedicine(id: Int): Medicine {
-        return medicineDAO.getById(id)
-    }
-
-
-    fun deleteMedicine(id: Int){
-        medicineDAO.deleteById(id)
-    }
-
     fun onAddButtonClick() {
         addPopupView.getData()
         addPopupView.setData()
     }
 
     fun addAvailableQuantity(number: Float, id: Int) {
-        medicineDAO.add(number, id)
+        medicineDAO.addAvailableQuantity(number, id)
     }
 
     fun onCancelButtonClick() {

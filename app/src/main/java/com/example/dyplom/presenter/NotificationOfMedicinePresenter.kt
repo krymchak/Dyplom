@@ -17,7 +17,7 @@ class NotificationOfMedicinePresenter {
 
     val context = App.applicationContext()
     val medicineDAO = MyDatabase.getInstance(context).MedicineDAO()
-    val timeOfMedicineDAO = MyDatabase.getInstance(context).TimeOfMedicineDAO()
+    val historyOfTakingMedicationDAO = MyDatabase.getInstance(context).HistoryOfTakingMedicationDAO()
     val notificationOfMedicineView: NotificationOfMedicineView
 
     constructor(notificationOfMedicineView: NotificationOfMedicineView)
@@ -29,8 +29,10 @@ class NotificationOfMedicinePresenter {
         return medicineDAO.getById(id)
     }
 
-    fun onAcceptButtonClick(id: Int) {
+    fun onAcceptButtonClick(id: Int, timeid: Int) {
         medicineDAO.reduce(id)
+        val pid = ((id!!+timeid)*(id!!+timeid+1)+timeid)/2
+        historyOfTakingMedicationDAO.taking(pid)
         notificationOfMedicineView.accept()
     }
 

@@ -21,10 +21,16 @@ class NotificationOfMedicineActivity : AppCompatActivity(), NotificationOfMedici
 
     var notificationOfMedicinePresenter = NotificationOfMedicinePresenter(this)
 
+    // id leku, który przeba przyjąć
     var id: Int = 0
+    // id czasu przyjmowania leku
     var timeid: Int =0
+    // lek, który przeba przyjąć
     lateinit var medicine: Medicine
 
+    /*
+    * Funkcja do tworzenia widoku
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -33,6 +39,9 @@ class NotificationOfMedicineActivity : AppCompatActivity(), NotificationOfMedici
         setInformation()
     }
 
+    /*
+     * Funkcja do pokazania informacji o leku
+     */
     fun setInformation()
     {
         id = intent.getIntExtra("id",0)
@@ -44,8 +53,9 @@ class NotificationOfMedicineActivity : AppCompatActivity(), NotificationOfMedici
 
     }
 
-
-
+    /*
+    * Funkcja do przejścia do widoku NeedBuy
+    */
     fun showNeedBuy()
     {
         val intent = Intent(this, NeedBuyActivity::class.java)
@@ -54,27 +64,39 @@ class NotificationOfMedicineActivity : AppCompatActivity(), NotificationOfMedici
     }
 
 
+    /*
+     * Funkcja do powrotu do widoku głównego
+     */
     fun returnToMainActivity()
     {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
 
+    /*
+     * Funkcja zarządzająca przyciskami
+     * parametr: v - element sterujący przyciskiem
+     */
     fun onClick(v: View)
     {
         when (v?.id)
         {
-            R.id.accept -> {notificationOfMedicinePresenter.onAcceptButtonClick(id)}
+            R.id.accept -> {notificationOfMedicinePresenter.onAcceptButtonClick(id, timeid)}
             R.id.later -> {notificationOfMedicinePresenter.onLaterButtonClick(id, timeid)}
         }
     }
 
-
+    /*
+    * Funkcja do odłożenia przyjmowania leku
+    */
     override fun later()
     {
         returnToMainActivity()
     }
 
+    /*
+    * Funkcja do akceptacji przyjmowania leku
+     */
     override fun accept()
     {
         if (medicine.isNeedBuy())

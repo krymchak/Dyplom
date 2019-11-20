@@ -1,9 +1,6 @@
 package com.example.dyplom.activity
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.app.TimePickerDialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -20,30 +17,36 @@ import com.example.dyplom.presenter.AddMedicinePresenter
 import com.example.dyplom.view.AddMedicineView
 import java.util.*
 
-
-
 class AddMedicineActivity : AppCompatActivity(), AddMedicineView {
 
     val addMedicinePresenter = AddMedicinePresenter(this)
 
+
+    // Zmienne do przechowywania danych wprowadzanego leku
     var id = 0
     var name= ""
     var available_quantity = 0f
     var required_amount = 0f
     var dose = 0f
-    //var listOfTime: ArrayList<TimeOfMedicine> = arrayListOf<TimeOfMedicine>()
     var type = ""
 
-    var types= arrayOf("tablet","capsule", "drops", "injection", "ointment", "syrup", "spoon", "spray", "inhalator")
 
-    private val timeListAdapter : TimeListAdapter = TimeListAdapter(this, ArrayList<TimeOfMedicine>())
+    // Możliwe typy leków
+    var types= arrayOf("tablet", "drops", "injection", "ointment", "spoon", "spray")
+
+    // GridView do pokazania wprowadzonych czasów oraz adapter do niego
     lateinit var gridView : GridView
+    private val timeListAdapter : TimeListAdapter = TimeListAdapter(this, ArrayList<TimeOfMedicine>())
 
+    // Pola, z których są pobierane dane wprowadzanego leku
     lateinit var nameEditText: EditText
     lateinit var availableQuantityEditText: EditText
     lateinit var requiredAmountEditText: EditText
     lateinit var doseEditText: EditText
 
+    /*
+    * Funkcja do tworzenia widoku
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_medicine)
@@ -51,13 +54,13 @@ class AddMedicineActivity : AppCompatActivity(), AddMedicineView {
         var listOfTime: ArrayList<TimeOfMedicine> = arrayListOf<TimeOfMedicine>()
         gridView = findViewById<GridView>(R.id.gridview)
         if (savedInstanceState != null) {
-            //     Toast.makeText(this, "bbb", Toast.LENGTH_SHORT).show()
             listOfTime = savedInstanceState.getParcelableArrayList("listOfTime")
-            timeListAdapter.setItems(listOfTime)
+            timeListAdapter.upadateList(listOfTime)
         }
 
         gridView.setAdapter(timeListAdapter)
 
+        // Ustawienie funkcji na długi przycisk na czas. Stworzenie alarmu z zapytaniem o usunięciu czasu
         gridView.onItemLongClickListener = AdapterView.OnItemLongClickListener { adapter, arg1, pos, id ->
 
             val builder = AlertDialog.Builder(this)
@@ -76,17 +79,21 @@ class AddMedicineActivity : AppCompatActivity(), AddMedicineView {
             alert.show()
 
             true
-        };
-
+        }
 
         findAllView()
-
     }
 
+    /*
+     * Funkcja do usuwania czasu
+     */
     private fun deleteTime(pos: Int) {
         timeListAdapter.delete(pos)
     }
 
+    /*
+     * Funkcja do wyszukiwania pól z danymi o leku
+     */
     private fun findAllView()
     {
         nameEditText = findViewById(R.id.tytul) as EditText
@@ -96,8 +103,11 @@ class AddMedicineActivity : AppCompatActivity(), AddMedicineView {
     }
 
 
-
-
+    /*
+     * Funkcja sprawdzająca, czy wszystkie potrzebne dane zostały wprowadzone.
+     * Wyswietla komunikaty o konieczności wprowadzenia danych
+     * return: true - wszystkie potrzebne dane zostały wprowadzone, false - jakieś dane nie są wprowadzone
+     */
     private fun isAllDataEntered(): Boolean
     {
 
@@ -134,6 +144,10 @@ class AddMedicineActivity : AppCompatActivity(), AddMedicineView {
         return true
     }
 
+    /*
+     * Funkcja, pobierające dane leku z pól i zapisująca ich do odpowiednich zmiennych
+     * return: true - wszystkie potrzebne dane zostały wprowadzone, false - jakieś dane nie są wprowadzone
+     */
     override fun getDataFromEditText(): Boolean
     {
         if (!isAllDataEntered())
@@ -145,7 +159,10 @@ class AddMedicineActivity : AppCompatActivity(), AddMedicineView {
         return true
     }
 
-
+    /*
+     * Funkcja tworząca nowy lek.
+     * Po jej wykonaniu aktywność konczy swoje działanie
+     */
     override fun addNewMedicine()
     {
         val listOfTime= timeListAdapter.getItems() as List<TimeOfMedicine>
@@ -157,6 +174,9 @@ class AddMedicineActivity : AppCompatActivity(), AddMedicineView {
     }
 
 
+    /*
+     * Funkcja dodająca czas przyjmowania leku
+     */
     override fun addTime()
     {
         val calendar = Calendar.getInstance()
@@ -166,6 +186,10 @@ class AddMedicineActivity : AppCompatActivity(), AddMedicineView {
         TimePickerDialog(this, timeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
     }
 
+    /*
+     * Funkcja pobierająca dane o typie leku oraz zmieniająca kolory przycisków odpowiadających za typy
+     * parametr: v - element sterujący przyciskiem
+     */
     fun type (v: View)
     {
         var typ = v.resources.getResourceName(v.id).toString()
@@ -181,11 +205,18 @@ class AddMedicineActivity : AppCompatActivity(), AddMedicineView {
 
     }
 
+    /*
+     * Funkcja dodająca czas do gridView
+     * parametr: time - dodawany czas
+     */
     override fun setTime(time:TimeOfMedicine){
         timeListAdapter.add(time)
-
     }
 
+    /*
+     * Funkcja zarządzająca przyciskami
+     * parametr: v - element sterujący przyciskiem
+     */
     fun onClick(v: View)
     {
         when (v?.id)
@@ -195,6 +226,10 @@ class AddMedicineActivity : AppCompatActivity(), AddMedicineView {
         }
     }
 
+    /*
+     * Funkcja Wywoływana, aby poprosić aktywność o zapisanie jej bieżącego stanu dynamicznego,
+     *  aby można go było później zrekonstruować w nowej instancji jej procesu.
+     */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState!!.putString("type", type)
@@ -202,6 +237,9 @@ class AddMedicineActivity : AppCompatActivity(), AddMedicineView {
         outState!!.putParcelableArrayList("listOfTime", listOfTime)
     }
 
+    /*
+     * Funkcja Wywoływana, aby zrekonstruować stanu dynamicznego aktywności.
+     */
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
         if (savedInstanceState != null) {

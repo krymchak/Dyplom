@@ -19,8 +19,13 @@ class NeedBuyActivity : AppCompatActivity(), NeedBuyView {
 
 
     var id: Int = 0
+    // Lek, który trzeba dokupić
     var medicine: Medicine? = null
 
+
+    /*
+     * Funkcja do tworzenia widoku
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -29,10 +34,16 @@ class NeedBuyActivity : AppCompatActivity(), NeedBuyView {
         showInformation()
     }
 
+    /*
+     * Funkcja do wyswietlenia informacji
+     */
     private fun showInformation() {
         needBuyPresenter.showMedicine()
     }
 
+    /*
+     * Funkcja do ustawienia informacji o leku
+     */
     override fun setInformation()
     {
         if(medicine!=null) {
@@ -42,27 +53,45 @@ class NeedBuyActivity : AppCompatActivity(), NeedBuyView {
 
     }
 
-    override fun getInformation()
-    {
+    /*
+     * Funkcja pobierająca informacje o leku
+     */
+    override fun getInformation() {
         id = intent.getIntExtra("id",0)
         medicine = needBuyPresenter.getMedicine(id)
 
-}
-
-    fun accept (v: View)
-    {
-        returnToMainActivity()
 
     }
 
-    fun cancel (v: View)
+    /*
+     * Funkcja zarządzająca przyciskami
+     * parametr: v - element sterujący przyciskiem
+     */
+    fun onClick (v: View)
     {
-        returnToMainActivity()
+        when (v?.id)
+        {
+            R.id.accept -> {needBuyPresenter.onAcceptButtonClick()}
+            R.id.later -> {needBuyPresenter.onLaterButtonClick()}
+        }
+
     }
 
-    fun returnToMainActivity()
+    /*
+     * Funkcja do powrotu do widoku głównego
+     */
+    override fun returnToMainActivity()
     {
         val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+    }
+
+    /*
+    * Funkcja do przejścia do widoku mapy
+    */
+    override fun goToMap()
+    {
+        val intent = Intent(this, MapsActivity::class.java)
         startActivity(intent)
     }
 }
